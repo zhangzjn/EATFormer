@@ -1,5 +1,15 @@
 <div align="center">
     <img src="resources/cute_sheep.png" width="600"/>
+    <div>&nbsp;</div>
+    <div align="center">
+        <a href="https://april.zju.edu.cn/">
+        APRIL Lab
+        </a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="https://open.youtu.qq.com/#/open">
+        Youtu Lab
+        </a>
+    </div>
 </div>
 
 --- 
@@ -43,4 +53,103 @@ Backbone | mIoU | Params. | FLOPs |
 | EATFormer-Base | 49.3 | 79M | 1030G | 
 
 # Get Started
-EATFormer models and train/test codes will be released soon ...
+
+## Installation
+- Clone this repo:
+
+  ```shell
+  git clone https://github.com/zhangzjn/EATFormer.git && cd EATFormer
+  ```
+- Prepare experimental environment
+
+  ```shell
+  conda install -y pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
+  pip3 install timm==0.4.12 tensorboardX einops torchprofile fvcore
+  pip3 install opencv-python opencv-contrib-python imageio scikit-image scipy sklearn numpy-hilbert-curve==1.0.1 pyzorder==0.0.1 
+  pip3 install click psutil ninja ftfy regex gdown blobfile termcolor yacs tqdm glog lmdb easydict requests openpyxl paramiko
+  ```
+  
+## Prepare ImageNet-1K Dataset 
+
+Download and extract [ImageNet-1K](http://image-net.org/) dataset in the following directory structure:
+
+```
+├── imagenet
+    ├── train
+        ├── n01440764
+            ├── n01440764_10026.JPEG
+            ├── ...
+        ├── ...
+    ├── train.txt (optional)
+    ├── val
+        ├── n01440764
+            ├── ILSVRC2012_val_00000293.JPEG
+            ├── ...
+        ├── ...
+    └── val.txt (optional)
+```
+
+optionally run `data/lmdb_dataset.py` to prepare lmdb format for accelerating data read.
+
+## Test
+- Download pre-trained models to `pretrained`
+
+- Check the `data` setting for the config file `configs/classification.py`
+    - `data.name`
+    - `data.root`
+    
+- Check the `model` setting for the config file `configs/classification.py`
+    - `model.name`
+    - `model.model_kwargs['checkpoint_path']`
+    
+- Test with 8 GPUs in one node: `./run.sh 8 configs/classification.py test` 
+
+## Train
+- Check `data` and `model` settings for the config file `configs/classification.py`
+
+- Train with 8 GPUs in one node: `./run.sh 8 configs/classification.py train`
+
+- Modify `trainer.resume_dir` parameter to resume training.
+
+## Down-Stream Tasks
+- Config and backbone files for [MMDetection](https://github.com/open-mmlab/mmdetection) and [MMSegmentation](https://github.com/open-mmlab/mmsegmentation) are listed in `down_stream_tasks/`.
+
+## Compare Params/FLOPs/Speed with SOTAs
+- `python3 util/params_flops_speed.py`
+
+# Citation
+If our work is helpful for your research, please consider citing:
+```
+@inproceedings{zhang2021analogous,
+  title={Analogous to Evolutionary Algorithm: Designing a Unified Sequence Model},
+  author={Zhang, Jiangning and Xu, Chao and Li, Jian and Chen, Wenzhou and Wang, Yabiao and Tai, Ying and Chen, Shuo and Wang, Chengjie and Huang, Feiyue and Liu, Yong},
+  journal={Advances in Neural Information Processing Systems},
+  volume={34},
+  year={2021}
+}
+```
+
+# Acknowledgements
+We thank following repos for providing assistance for our research:
+- [TIMM](https://github.com/rwightman/pytorch-image-models)
+- [MMDetection](https://github.com/open-mmlab/mmdetection)
+- [MMSegmentation](https://github.com/open-mmlab/mmsegmentation)
+- [pytorch-grad-cam](https://github.com/jacobgil/pytorch-grad-cam)
+
+and works for providing the source codes for fair comparisons:
+- [DeiT](https://github.com/facebookresearch/deit)
+- [Swin-Transformer](https://github.com/microsoft/Swin-Transformer)
+- [PVT, PVTv2](https://github.com/whai362/PVT)
+- [CoaT](https://github.com/mlpc-ucsd/CoaT)
+- [Twins](https://github.com/Meituan-AutoML/Twins)
+- [Container](https://github.com/allenai/container)
+- [ViTAE,ViTAEv2](https://github.com/ViTAE-Transformer/ViTAE-Transformer)
+- [XCiT](https://github.com/facebookresearch/xcit)
+- [CrossFormer](https://github.com/cheerss/CrossFormer)
+- [UniFormer](https://github.com/Sense-X/UniFormer)
+- [DAT](https://github.com/LeapLabTHU/DAT)
+- [MPViT](https://github.com/youngwanLEE/MPViT)
+- [Shunted](https://github.com/oliverrensu/shunted-transformer)
+- [PoolFormer](https://github.com/sail-sg/poolformer)
+- [VAN](https://github.com/Visual-Attention-Network/VAN-Classification)
+- [NAT](https://github.com/SHI-Labs/Neighborhood-Attention-Transformer)

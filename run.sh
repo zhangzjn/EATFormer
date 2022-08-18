@@ -1,0 +1,1 @@
+python3 -m torch.distributed.launch --nproc_per_node=$1 --use_env run.py -c $2 -m $3
